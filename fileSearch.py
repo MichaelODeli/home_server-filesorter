@@ -31,9 +31,8 @@ def searchById(id):
             ]
     else:
         return [['Not found']]
-def searchByFilename(filename):
-    return None
-
+"""
+# obsolete
 def confReader(name):
     cfg = configparser.ConfigParser()
     with open(name, 'r', encoding='utf-8') as fp:
@@ -62,7 +61,6 @@ def searchByChannel(channel):
     with open('storageLib.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
     channelname = channel.lower().replace(' ', '-')
-    channelsplit = channel.lower().split(' ')
     libNames = [cfg.get('libs', 'youtubelib'), cfg.get('libs', 'serialslib'), cfg.get('libs', 'filmslib')]
     apd = []
     k = 1
@@ -84,5 +82,48 @@ def searchByChannel(channel):
         return getContent(found[0], found[1])
     except UnboundLocalError:
         return [['Not found']]
+"""
 
-# print(searchByChannel(channel='сосед'))
+def confReaderOptions(name):
+    cfg = configparser.ConfigParser()
+    if name == 'storageLib_Films.ini':
+        cats = 'films'
+    if name == 'storageLib_Yt.ini':
+        cats = 'youtube'
+    if name == 'storageLib_Serials.ini':
+        cats = 'serials'
+    with open(name, 'r', encoding='utf-8') as fp:
+        cfg.read_file(fp)
+    return(cfg.items(cats, raw=True))
+
+def searchByFilename(filename):
+    cfg = configparser.ConfigParser()
+    with open('storageLib.ini', 'r', encoding='utf-8') as fp:
+        cfg.read_file(fp)
+    filename = filename.lower().replace(' ', '-')
+    libNames = [cfg.get('libs', 'youtubelib'), cfg.get('libs', 'serialslib'), cfg.get('libs', 'filmslib')]
+    founded = []
+    for n in libNames:
+        g = confReaderOptions(n)
+        for f in g:
+            if filename.lower() in f[1].lower():
+                foundName = f[1]
+                id = f[0]
+                founded.append([id, foundName])
+    fidex = []
+    if founded!=[]:
+        for naming in founded:
+            id = naming[0]
+            if id[0]=='y':
+                categ='youtube'
+            if id[0]=='f':
+                categ='films'
+            if id[0]=='s':
+                categ='serials'
+            channel = naming[1].split('/')[0]
+            filename = naming[1].split('/')[1]
+            fidex.append([categ, id, channel, filename])
+        return(fidex)
+    else: return[['Not found']]
+
+# print(searchByFilename(filename='корпорация'))
