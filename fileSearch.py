@@ -96,7 +96,7 @@ def confReaderOptions(name):
         cfg.read_file(fp)
     return(cfg.items(cats, raw=True))
 
-def searchByFilename(filename):
+def search(filename):
     cfg = configparser.ConfigParser()
     with open('storageLib.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
@@ -107,6 +107,10 @@ def searchByFilename(filename):
         g = confReaderOptions(n)
         for f in g:
             if filename.lower() in f[1].lower():
+                foundName = f[1]
+                id = f[0]
+                founded.append([id, foundName])
+            if filename.lower() in f[0].lower():
                 foundName = f[1]
                 id = f[0]
                 founded.append([id, foundName])
