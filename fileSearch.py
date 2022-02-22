@@ -1,11 +1,11 @@
 import configparser
 
-import fileManager as fman
+import fileManager_client as fman
 
 def searchById(id):
     if fman.isVideoIDExist(id)==True:
         cfg = configparser.ConfigParser()
-        with open('storageLib.ini', 'r', encoding='utf-8') as fp:
+        with open('settings.ini', 'r', encoding='utf-8') as fp:
             cfg.read_file(fp)
         wayConf = cfg.get('settings', 'way')
         if id[0]=='y' or id[0]=='f' or id[0]=='s':
@@ -24,8 +24,6 @@ def searchById(id):
             with open(libName, 'r', encoding='utf-8') as fp:
                 cfg.read_file(fp)
             fullway = wayConf + cfg.get(categ, id)
-            # return [fullway, cfg.get(categ, id).split('/')[0], cfg.get(categ, id).split('/')[1]]
-            # return [categ, id, cfg.get(categ, id).split('/')[0], cfg.get(categ, id).split('/')[1]]
             return [
                 [categ, id, cfg.get(categ, id).split('/')[0], cfg.get(categ, id).split('/')[1]]
             ]
@@ -58,7 +56,7 @@ def getContent(foundCategory, foundChannel):
 
 def searchByChannel(channel):
     cfg = configparser.ConfigParser()
-    with open('storageLib.ini', 'r', encoding='utf-8') as fp:
+    with open('settings.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
     channelname = channel.lower().replace(' ', '-')
     libNames = [cfg.get('libs', 'youtubelib'), cfg.get('libs', 'serialslib'), cfg.get('libs', 'filmslib')]
@@ -98,7 +96,7 @@ def confReaderOptions(name):
 
 def search(filename):
     cfg = configparser.ConfigParser()
-    with open('storageLib.ini', 'r', encoding='utf-8') as fp:
+    with open('settings.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
     filename = filename.lower().replace(' ', '-')
     libNames = [cfg.get('libs', 'youtubelib'), cfg.get('libs', 'serialslib'), cfg.get('libs', 'filmslib')]

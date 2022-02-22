@@ -29,7 +29,7 @@ def checkDoubles(oplistin, filenam):
 
 def listRebuild(type):
     cfg = configparser.ConfigParser()
-    with open('storageLib.ini', 'r', encoding='utf-8') as fp:
+    with open('settings.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
     if type=='youtube':
         folderConf = 'youtubefolder'
@@ -144,7 +144,7 @@ def listRebuild(type):
 
 def isVideoIDExist(id):
     cfg = configparser.ConfigParser()
-    with open('storageLib.ini', 'r', encoding='utf-8') as fp:
+    with open('settings.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
     if id[0]=='y' or id[0]=='f' or id[0]=='s':
         if id[0]=='y':
@@ -166,9 +166,10 @@ def isVideoIDExist(id):
         return False
 def getLinkId(id):
     cfg = configparser.ConfigParser()
-    with open('storageLib.ini', 'r', encoding='utf-8') as fp:
+    with open('settings.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
     wayConf = cfg.get('settings', 'way')
+    # wayConf = cfg.get('links', 'webdir')+cfg.get('settings', 'storageFolder')+'/'
     if id[0]=='y' or id[0]=='f' or id[0]=='s':
         if id[0]=='y':
             libName = cfg.get('libs', 'youtubelib')
@@ -188,4 +189,3 @@ def getLinkId(id):
         return fullway
     else: 
         return False
-# listRebuild(type='youtube') # debug
