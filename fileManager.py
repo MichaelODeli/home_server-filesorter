@@ -31,27 +31,17 @@ def listRebuild(type):
     cfg = configparser.ConfigParser()
     with open('settings.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
-    if type=='youtube':
-        folderConf = 'youtubefolder'
-        confDir = 'youtube/'
-        libName = cfg.get('libs', 'youtubelib')
-        libPrefix = 'y'
-    elif type=='films':
-        folderConf = 'filmsfolder'
-        confDir = 'films/'
-        libName = cfg.get('libs', 'filmslib')
-        libPrefix = 'f'
-    elif type=='serials':
-        folderConf = 'serialsfolder'
-        confDir = 'serials/'
-        libName = cfg.get('libs', 'serialslib')
-        libPrefix = 's'
+    if cfg.has_option('libs', type):
+        libPrefix = type[0]
+        folderConf = type + 'folder'
+        confDir = type + '/'
+        libName = cfg.get('libs', type)
     else:
-        print('Break')
         return('type '+type+' is not supported')
     wayConf = cfg.get('settings', 'way')
-    ytDir = cfg.get('settings', folderConf)
-    way = wayConf + ytDir + '/*/*.mp4'
+    folderDir = cfg.get('settings', folderConf)
+    # way = wayConf + folderDir + '/*/*.mp4'
+    way = wayConf + folderDir + '/*/*'+cfg.get('extensions', type)
     ytList = glob.glob(way, recursive=True)
     ytListFull = []
     ytListCleaned = []
@@ -146,46 +136,34 @@ def isVideoIDExist(id):
     cfg = configparser.ConfigParser()
     with open('settings.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
-    if id[0]=='y' or id[0]=='f' or id[0]=='s':
-        if id[0]=='y':
-            libName = cfg.get('libs', 'youtubelib')
-            categ='youtube'
-        if id[0]=='f':
-            libName = cfg.get('libs', 'filmslib')
-            categ='films'
-        if id[0]=='s':
-            libName = cfg.get('libs', 'serialslib')
-            categ='serials'
+    if cfg.has_option('prefixes', id[0])==True:
+        categ = cfg.get('prefixes', id[0])
+        libName = cfg.get('libs', categ)
         with open(libName, 'r', encoding='utf-8') as fp:
             cfg.read_file(fp)
-        if cfg.has_option(categ, id)==True:
-            return True
-        else:
-            return False
+            if cfg.has_option(categ, id)==True:
+                return True
+            else:
+                return False
     else: 
         return False
+
 def getLinkId(id):
     cfg = configparser.ConfigParser()
     with open('settings.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
     wayConf = cfg.get('settings', 'way')
-    # wayConf = cfg.get('links', 'webdir')+cfg.get('settings', 'storageFolder')+'/'
-    if id[0]=='y' or id[0]=='f' or id[0]=='s':
-        if id[0]=='y':
-            libName = cfg.get('libs', 'youtubelib')
-            wayConf=wayConf+'youtube/'
-            categ='youtube'
-        if id[0]=='f':
-            libName = cfg.get('libs', 'filmslib')
-            wayConf=wayConf+'films/'
-            categ='films'
-        if id[0]=='s':
-            libName = cfg.get('libs', 'serialslib')
-            wayConf=wayConf+'serials/'
-            categ='serials'
-        with open(libName, 'r', encoding='utf-8') as fp:
-            cfg.read_file(fp)
-        fullway = wayConf + cfg.get(categ, id)
-        return fullway
-    else: 
-        return False
+    if isVideoIDExist(id)==True:
+        if cfg.has_option('prefixes', id[0]):
+            categ = cfg.get('prefixes', id[0])
+            wayParam = categ + 'folder'
+            wayConf = wayConf + cfg.get('settings', wayParam)+'/'
+            libName = cfg.get('libs', categ)
+            with open(libName, 'r', encoding='utf-8') as fp:
+                cfg.read_file(fp)
+            fullway = wayConf + cfg.get(categ, id)
+            return fullway
+        else: 
+            return False # check usage!
+    else: return None
+listRebuild(type='youtube')
