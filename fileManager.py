@@ -31,23 +31,6 @@ def listRebuild(type):
     cfg = configparser.ConfigParser()
     with open('settings.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
-    # if type=='youtube':
-    #     folderConf = 'youtubefolder'
-    #     confDir = 'youtube/'
-    #     libName = cfg.get('libs', 'youtube')
-    #     libPrefix = 'y'
-    # elif type=='films':
-    #     folderConf = 'filmsfolder'
-    #     confDir = 'films/'
-    #     libName = cfg.get('libs', 'films')
-    #     libPrefix = 'f'
-    # elif type=='serials':
-    #     folderConf = 'serialsfolder'
-    #     confDir = 'serials/'
-    #     libName = cfg.get('libs', 'serials')
-    #     libPrefix = 's'
-    # else:
-    #     print('Break')
     if cfg.has_option('libs', type):
         libPrefix = type[0]
         folderConf = type + 'folder'
@@ -58,7 +41,7 @@ def listRebuild(type):
     wayConf = cfg.get('settings', 'way')
     folderDir = cfg.get('settings', folderConf)
     # way = wayConf + folderDir + '/*/*.mp4'
-    way = wayConf + folderDir + '/*/*'+cfg.get('extensions', 'type')
+    way = wayConf + folderDir + '/*/*'+cfg.get('extensions', type)
     ytList = glob.glob(way, recursive=True)
     ytListFull = []
     ytListCleaned = []
@@ -183,4 +166,4 @@ def getLinkId(id):
         else: 
             return False # check usage!
     else: return None
-print(getLinkId('y0'))
+listRebuild(type='youtube')

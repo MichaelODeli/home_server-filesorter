@@ -53,7 +53,10 @@ def search(filename, type):
     if founded!=[]:
         for naming in founded:
             id = naming[0]
-            categ = cfg.get('prefixes', id[0])
+            try:
+                categ = cfg.get('prefixes', id[0])
+            except configparser.NoOptionError:
+                return[['Not found']]
             channel = naming[1].split('/')[0]
             filename = naming[1].split('/')[1]
             fidex.append([categ, id, channel, filename])
