@@ -1,9 +1,23 @@
 import configparser
 
-import fileManager as fman
+def isVideoIDExist(id):
+    cfg = configparser.ConfigParser()
+    with open('settings.ini', 'r', encoding='utf-8') as fp:
+        cfg.read_file(fp)
+    if cfg.has_option('prefixes', id[0])==True:
+        categ = cfg.get('prefixes', id[0])
+        libName = cfg.get('libs', categ)
+        with open(libName, 'r', encoding='utf-8') as fp:
+            cfg.read_file(fp)
+            if cfg.has_option(categ, id)==True:
+                return True
+            else:
+                return False
+    else: 
+        return False
 
 def searchById(id):
-    if fman.isVideoIDExist(id)==True:
+    if isVideoIDExist(id)==True:
         cfg = configparser.ConfigParser()
         with open('settings.ini', 'r', encoding='utf-8') as fp:
             cfg.read_file(fp)

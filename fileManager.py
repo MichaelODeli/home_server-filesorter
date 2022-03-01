@@ -152,7 +152,8 @@ def getLinkId(id):
     cfg = configparser.ConfigParser()
     with open('settings.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
-    wayConf = cfg.get('settings', 'way')
+    # wayConf = cfg.get('settings', 'way')
+    wayConf = cfg.get('links', 'webdir')+'storage/'
     if isVideoIDExist(id)==True:
         if cfg.has_option('prefixes', id[0]):
             categ = cfg.get('prefixes', id[0])
@@ -166,4 +167,3 @@ def getLinkId(id):
         else: 
             return False # check usage!
     else: return None
-listRebuild(type='youtube')
