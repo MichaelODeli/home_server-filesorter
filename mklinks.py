@@ -11,5 +11,7 @@ for element in list:
     wayto.append(element)
     wayto='/'.join(wayto)
     wayfrom = os.path.abspath(element)
-    command = 'mklink "'+wayto+'" "'+wayfrom+'"'
-    os.system(command)
+    commandWin = 'mklink "'+wayto+'" "'+wayfrom+'"'
+    commandLin = 'ln -s '+wayfrom+' '+wayto
+    os.system(commandWin)
+    # print(commandLin)
