@@ -20,17 +20,17 @@ def searchById(id):
             return [['Not found']]
 
 
-# def confReaderOptions(name, type):
-#     if type == 'keywords':
+# def confReaderOptions(name, searchType):
+#     if searchType == 'keywords':
 #         cats = 'keywords'
-#     if type == 'filename':
+#     if searchType == 'filename':
 #         cats = name.replace('storageLib_', '').replace('.ini', '').lower()
 #     cfg = configparser.ConfigParser()
 #     with open(name, 'r', encoding='utf-8') as fp:
 #         cfg.read_file(fp)
 #     return(cfg.items(cats, raw=True))
 
-# def search(filename, type):
+# def search(filename, searchType):
 #     cfg = configparser.ConfigParser()
 #     with open('settings.ini', 'r', encoding='utf-8') as fp:
 #         cfg.read_file(fp)
@@ -38,7 +38,7 @@ def searchById(id):
 #     libNames = cfg.items('libs')
 #     founded = []
 #     for n in libNames:
-#         g = confReaderOptions(n[1], type)
+#         g = confReaderOptions(n[1], searchType)
 #         for f in g:
 #             if filename.lower() in f[1].lower():
 #                 foundName = f[1]
@@ -62,17 +62,17 @@ def searchById(id):
 #         return(fidex)
 #     else: return[['Not found']]
 
-def confReaderOptions(name, type):
-    if type == 'keywords':
+def confReaderOptions(name, searchType):
+    if searchType == 'keywords':
         cats = 'keywords'
-    if type == 'filename' or type == 'channel' or type == 'all':
+    if searchType == 'filename' or searchType == 'channel' or searchType == 'all':
         cats = name.replace('storageLib_', '').replace('.ini', '').lower()
     cfg = configparser.ConfigParser()
     with open(name, 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
     return(cfg.items(cats, raw=True))
 
-def search(filename, type):
+def search(filename, searchType):
     cfg = configparser.ConfigParser()
     with open('settings.ini', 'r', encoding='utf-8') as fp:
         cfg.read_file(fp)
@@ -80,32 +80,29 @@ def search(filename, type):
     libNames = cfg.items('libs')
     founded = []
     for n in libNames:
-        g = confReaderOptions(n[1], type)
+        g = confReaderOptions(n[1], searchType)
         for f in g:
             if str(f[0])!='-1':
                 channel_ = f[1].split('/')[0]
                 filename_ = f[1].split('/')[1]
-                if type == 'filename' or type == 'channel' or type == 'keywords':
-                    if type == 'filename':
+                if searchType == 'filename' or searchType == 'channel' or searchType == 'keywords':
+                    if searchType == 'filename':
                         tofind = filename_
-                    elif type == 'channel':
+                    elif searchType == 'channel':
                         tofind = channel_
-                    elif type == 'keywords':
+                    elif searchType == 'keywords':
                         tofind = f[1]
-                    else: return[['Incorrect type']]
+                    else: return[['Incorrect searchType']]
                     if filename.lower() in tofind.lower():
                         foundName = f[1]
-                        id = f[0]
-                        founded.append([id, foundName])
-                elif type == 'all':
+                        founded.append([f[0], foundName])
+                elif searchType == 'all':
                     if filename.lower() in f[0].lower():
                         foundName = f[1]
-                        id = f[0]
-                        founded.append([id, foundName])
+                        founded.append([f[0], foundName])
                     if filename.lower() in f[1].lower():
                         foundName = f[1]
-                        id = f[0]
-                        founded.append([id, foundName])
+                        founded.append([f[0], foundName])
     fidex = []
     if founded!=[]:
         for naming in founded:
@@ -120,4 +117,4 @@ def search(filename, type):
         return(fidex)
     else: return[['Not found']]
 
-# print(search(filename='python', type='keywords'))
+# print(search(filename='alex', searchType='all'))
