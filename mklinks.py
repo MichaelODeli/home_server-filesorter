@@ -14,4 +14,4 @@ for element in list:
     commandWin = 'mklink "'+wayto+'" "'+wayfrom+'"'
     commandLin = 'ln -s '+wayfrom+' '+wayto
     os.system(commandWin)
-    # print(commandLin)
+    # print(commandWin)

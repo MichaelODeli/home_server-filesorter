@@ -6,7 +6,9 @@ g = os.path.dirname(os.path.abspath(__file__)).replace('\\', '/')+'/'
 import HTML
 import datetime
 import sys
+import traceback
 cfg = configparser.ConfigParser()
+# print(g)
 with open(g+'settings.ini', 'r', encoding='utf-8') as fp:
     cfg.read_file(fp)
 
@@ -85,11 +87,13 @@ def listRebuild(mode):
             fileWay = None
             filname = filesListSplited[i][-1]
             fileWay = flway.replace(filname, '')
-            # restricted = [r'%', '#', '*', '--', '$', ' ']
-            if filname.find(' ')!=(-1) or filname.find('%')!=(-1):
-                filname = filname.replace(' ', '-')
-                # print(flway+' '+fileWay+filname)
-                os.rename(flway, fileWay+filname)
+            restricted1 = ['#', '$', '%', '+', '*', '&', '?', '=', '---', '--', '___', '__', '   ', '  ']
+            restricted2 = ['-']
+            for j in restricted1:
+                filname=filname.replace(j, '')
+            for j in restricted2:
+                filname=filname.replace(j, ' ')
+            os.rename(flway, fileWay+filname)
             i+=1
         fileList = glob.glob(way, recursive=True)
         filesListFull = filesListFullFunc(fileList, True, wayConf)
@@ -139,7 +143,7 @@ def listRebuild(mode):
             else:
                 idl = filewayl[0]
                 if idl!=str(-1):
-                    channel = (filewayl[2].split('/'))[0]
+                    channel = (filewayl[1].split('/'))[0]
                     cfgl.remove_option(libType, idl)
                     cfgl.remove_option(channel, idl)
         with open(g+libName, 'w', encoding='utf-8') as fp:
@@ -255,6 +259,6 @@ try:
     else:
         listRebuild(mode='update')
 except Exception as e:
-    print(e)
+    print(traceback.format_exc())
 
 # listRebuild(mode='full')
